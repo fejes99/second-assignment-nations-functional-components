@@ -1,6 +1,7 @@
-.header {
+header {
   display: flex;
   justify-content: space-between;
+  align-content: center;
   padding: 20px 50px;
 }
 
@@ -10,4 +11,15 @@ input {
   -webkit-box-shadow: -10px 10px 15px -10px rgba(207, 207, 207, 1);
   -moz-box-shadow: -10px 10px 15px -10px rgba(207, 207, 207, 1);
   box-shadow: -10px 10px 15px -10px rgba(207, 207, 207, 1);
+}
+
+select {
+  padding: 10px;
+  border: 0.5px solid #ccc;
+}
+
+.info {
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
 }

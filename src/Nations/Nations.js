@@ -9,7 +9,7 @@ class Nations extends Component {
         {this.props.loading ? (
           <ScaleLoader color='#36d7b7' />
         ) : (
-          Object.values(this.props.nations).map((nation) => (
+          this.props.nations.map((nation) => (
             <div key={nation.name} className='card'>
               <img src={nation.flag.large} alt='flag' className='card-img' />
               <div className='card-header'>{nation.name}</div>
