@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import './App.css';
 import Nations from './Nations/Nations';
 import axios from 'axios';
+import { searchFilter } from './helper';
 
 class App extends Component {
   state = {
     nations: [],
-    filteredNations: [],
     loading: true,
     regions: [],
-    selectedRegion: 'All regions',
+    selectedRegion: '',
     searchQuery: '',
   };
 
@@ -21,7 +21,6 @@ class App extends Component {
       .then((res) => {
         this.setState({
           nations: Object.values(res.data),
-          filteredNations: Object.values(res.data),
           loading: false,
           regions: [
             ...new Set(Object.values(res.data).map((nation) => nation.region)),
@@ -32,65 +31,55 @@ class App extends Component {
 
   searchHandler = (event) => {
     const searchQuery = event.target.value;
-
     this.setState({
-      filteredNations: [...this.state.nations].filter((nation) =>
-        nation.name.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
       searchQuery: searchQuery,
     });
+
+    return searchFilter(this.state);
   };
 
-  regionSelectHandler = (event) => {
-    const region = event.target.value;
-
-    if (region === 'All regions') {
-      this.setState({
-        filteredNations: [...this.state.nations],
-        selectedRegion: region,
-        searchQuery: '',
-      });
-    } else {
-      this.setState({
-        filteredNations: [...this.state.nations].filter(
-          (nation) => nation.region === region
-        ),
-        selectedRegion: region,
-        searchQuery: '',
-      });
+  optionHandler = (event) => {
+    let selectedRegion = '';
+    if (event.target.value !== '') {
+      selectedRegion = event.target.value;
     }
+
+    this.setState({
+      selectedRegion: selectedRegion,
+    });
+
+    return searchFilter(this.state);
   };
 
   render() {
+    const { loading, regions, selectedRegion, searchQuery } = this.state;
+    const nations = searchFilter(this.state);
+
     return (
       <div className='App'>
         <header>
           <input
-            value={this.state.searchQuery}
+            value={searchQuery}
             type='text'
             placeholder='Search for...'
             onChange={(event) => this.searchHandler(event)}
           />
           <select
-            value={this.state.selectedRegion}
-            onChange={this.regionSelectHandler}
+            value={selectedRegion}
+            onChange={(event) => this.optionHandler(event)}
           >
-            <option value='All regions'>All regions</option>
-            {this.state.regions.map((region) => (
+            <option value=''>All regions</option>
+            {regions.map((region) => (
               <option key={region} value={region}>
                 {region}
               </option>
             ))}
           </select>
         </header>
-        {this.state.searchQuery !== '' &&
-        this.state.filteredNations.length === 0 ? (
+        {searchQuery !== '' && nations.length === 0 ? (
           <div className='info'>Country doesn't exist, try another one</div>
         ) : (
-          <Nations
-            nations={this.state.filteredNations || this.state.nations}
-            loader={this.state.loader}
-          />
+          <Nations nations={nations} loading={loading} />
         )}
       </div>
     );
