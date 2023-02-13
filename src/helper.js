@@ -12,7 +12,6 @@ export const searchFilter = (state) => {
       filteredNations = state.nations.filter((nation) => {
         const name = nation.name.toLowerCase();
         const capital = nation.capital.toLowerCase();
-        const region = nation.region;
 
         return name.includes(searchQuery) || capital.includes(searchQuery);
       });
