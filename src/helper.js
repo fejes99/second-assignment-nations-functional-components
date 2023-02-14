@@ -1,35 +1,21 @@
 export const searchFilter = (state) => {
-  if (state.searchQuery === '' && state.selectedRegion === '') {
-    return state.nations;
-  } else {
-    const selectedRegion = state.selectedRegion;
-    const searchQuery = state.searchQuery.toLowerCase();
-    let filteredNations = [];
+  const { selectedRegion, nations } = state;
+  const searchQuery = state.searchQuery.toLowerCase();
 
-    console.log('selectedRegion:: ', selectedRegion);
-
-    if (selectedRegion === '') {
-      filteredNations = state.nations.filter((nation) => {
-        const name = nation.name.toLowerCase();
-        const capital = nation.capital.toLowerCase();
-
-        return name.includes(searchQuery) || capital.includes(searchQuery);
-      });
-    } else {
-      filteredNations = state.nations.filter((nation) => {
-        const name = nation.name.toLowerCase();
-        const capital = nation.capital.toLowerCase();
-        const region = nation.region;
-
-        return (
-          (region === selectedRegion && name.includes(searchQuery)) ||
-          (region === selectedRegion && capital.includes(searchQuery))
-        );
-      });
-    }
-
-    console.log(filteredNations);
-
-    return filteredNations;
+  if (searchQuery === '' && selectedRegion === '') {
+    return nations;
   }
+
+  const filteredNations = nations.filter((nation) => {
+    const name = nation.name.toLowerCase();
+    const capital = nation.capital.toLowerCase();
+    const { region } = nation;
+
+    return (
+      (selectedRegion === '' || region === selectedRegion) &&
+      [name, capital].some((field) => field.includes(searchQuery))
+    );
+  });
+
+  return filteredNations;
 };
