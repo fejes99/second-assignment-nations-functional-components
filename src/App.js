@@ -22,38 +22,32 @@ class App extends Component {
         this.setState({
           nations: Object.values(res.data),
           loading: false,
-          regions: [
-            ...new Set(Object.values(res.data).map((nation) => nation.region)),
-          ],
+          regions: [...new Set(Object.values(res.data).map((nation) => nation.region))],
         });
       });
   }
 
   searchHandler = (event) => {
-    const searchQuery = event.target.value;
-    this.setState({
-      searchQuery: searchQuery,
-    });
-
-    return searchFilter(this.state);
+    this.setState(
+      {
+        searchQuery: event.target.value,
+      },
+      () => searchFilter(this.state.selectedRegion, this.state.nations, this.state.searchQuery)
+    );
   };
 
   optionHandler = (event) => {
-    let selectedRegion = '';
-    if (event.target.value !== '') {
-      selectedRegion = event.target.value;
-    }
-
-    this.setState({
-      selectedRegion: selectedRegion,
-    });
-
-    return searchFilter(this.state);
+    this.setState(
+      {
+        selectedRegion: event.target.value,
+      },
+      () => searchFilter(this.state.selectedRegion, this.state.nations, this.state.searchQuery)
+    );
   };
 
   render() {
     const { loading, regions, selectedRegion, searchQuery } = this.state;
-    const nations = searchFilter(this.state);
+    const nations = searchFilter(selectedRegion, this.state.nations, searchQuery);
 
     return (
       <div className='App'>
@@ -64,10 +58,7 @@ class App extends Component {
             placeholder='Search for...'
             onChange={(event) => this.searchHandler(event)}
           />
-          <select
-            value={selectedRegion}
-            onChange={(event) => this.optionHandler(event)}
-          >
+          <select value={selectedRegion} onChange={(event) => this.optionHandler(event)}>
             <option value=''>All regions</option>
             {regions.map((region) => (
               <option key={region} value={region}>

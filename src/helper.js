@@ -1,8 +1,7 @@
-export const searchFilter = (state) => {
-  const { selectedRegion, nations } = state;
-  const searchQuery = state.searchQuery.toLowerCase();
+export const searchFilter = (selectedRegion, nations, searchQuery) => {
+  const query = searchQuery.toLowerCase();
 
-  if (searchQuery === '' && selectedRegion === '') {
+  if (query === '' && selectedRegion === '') {
     return nations;
   }
 
@@ -13,7 +12,7 @@ export const searchFilter = (state) => {
 
     return (
       (selectedRegion === '' || region === selectedRegion) &&
-      [name, capital].some((field) => field.includes(searchQuery))
+      [name, capital].some((field) => field.includes(query))
     );
   });
 
