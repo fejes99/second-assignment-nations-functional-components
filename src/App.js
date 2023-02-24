@@ -1,7 +1,7 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './App.css';
 import Nations from './Nations/Nations';
-import axios from 'axios';
 import { searchFilter } from './helper';
 
 const App = () => {
